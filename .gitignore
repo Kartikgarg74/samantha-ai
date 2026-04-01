@@ -1,0 +1,45 @@
+# Environment & secrets
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Session & runtime data
+*.json
+!config.json
+!package.json
+conversation_history.json
+samantha_local_data.json
+assistant_session.json
+memory.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Models (downloaded at runtime)
+vosk-model-*/
+*.bin
+*.pt
+*.onnx
+
+# Logs
+*.log
+
+# Test artifacts
+.pytest_cache/
+htmlcov/
+.coverage
