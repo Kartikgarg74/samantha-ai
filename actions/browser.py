@@ -5,14 +5,37 @@ This module provides functions for controlling the web browser,
 including opening websites, performing searches, and navigation.
 """
 
+import ipaddress
 import webbrowser
 import time
 import re
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlparse
 from typing import Tuple, Optional
 
 # Import system prompts
 from core.prompts import prompt_manager
+
+
+def _validate_url(url: str) -> bool:
+    """Validate that a URL is safe to open (no javascript:, file://, or internal IPs)."""
+    try:
+        parsed = urlparse(url)
+        # Only allow http/https schemes
+        if parsed.scheme and parsed.scheme not in ('http', 'https', ''):
+            return False
+        # Reject internal/loopback hosts
+        hostname = parsed.hostname or parsed.netloc.split(':')[0]
+        if hostname in ('localhost', '127.0.0.1', '0.0.0.0', '::1'):
+            return False
+        try:
+            ip = ipaddress.ip_address(hostname)
+            if ip.is_private or ip.is_loopback or ip.is_reserved:
+                return False
+        except ValueError:
+            pass  # Not an IP — that's fine (it's a domain name)
+        return True
+    except Exception:
+        return False
 
 
 class BrowserControl:
@@ -138,6 +161,8 @@ def browser_action(command: str, system_prompt: Optional[str] = None) -> Tuple[s
                 else:
                     website_url = website
 
+                if not _validate_url(website_url):
+                    return f"Cannot open {website}: URL is not allowed.", "browser_error"
                 webbrowser.open(website_url)
                 response += f" Navigating to {website}."
 
@@ -174,6 +199,8 @@ def browser_action(command: str, system_prompt: Optional[str] = None) -> Tuple[s
             else:
                 website_url = website
 
+            if not _validate_url(website_url):
+                return f"Cannot open {website}: URL is not allowed.", "browser_error"
             webbrowser.open(website_url)
             response = f"Opening {website}."
             action_type = "browser_open"

@@ -1,5 +1,17 @@
 import os
+import re
 import subprocess
+
+
+def _sanitize_app_name(name: str) -> str:
+    """Sanitize app name to prevent command injection. Only allows safe characters."""
+    name = name.strip()
+    if not re.match(r'^[a-zA-Z0-9\s\-\.]+$', name):
+        raise ValueError(f"Invalid app name: contains unsafe characters")
+    if len(name) > 100:
+        raise ValueError("App name too long")
+    return name
+
 
 def system_action(command: str, system_prompt: str = "") -> tuple:
     """
@@ -16,8 +28,9 @@ def system_action(command: str, system_prompt: str = "") -> tuple:
 
     # Opening applications
     if "open" in command:
-        app_name = command.replace("open", "").strip().title()
+        raw_name = command.replace("open", "").strip().title()
         try:
+            app_name = _sanitize_app_name(raw_name)
             # Use subprocess.Popen and check if it raises an exception
             process = subprocess.Popen(['open', '-a', app_name])
             # Check if the process started successfully
@@ -29,8 +42,9 @@ def system_action(command: str, system_prompt: str = "") -> tuple:
 
     # Closing applications
     elif "close" in command:
-        app_name = command.replace("close", "").strip().title()
+        raw_name = command.replace("close", "").strip().title()
         try:
+            app_name = _sanitize_app_name(raw_name)
             # Use subprocess.run with check=True to raise an exception on non-zero exit codes
             result = subprocess.run(['osascript', '-e', f'tell application "{app_name}" to quit'], check=False)
             if result.returncode != 0:

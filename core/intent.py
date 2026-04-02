@@ -118,6 +118,8 @@ class IntentClassifier:
             self.model = None
             self.tokenizer = None
 
+    MAX_INPUT_LENGTH = 1000
+
     def classify(self, text: str) -> Tuple[str, float]:
         """
         Classify the intent of the user's text.
@@ -128,6 +130,11 @@ class IntentClassifier:
         Returns:
             Tuple of (intent_name, confidence_score)
         """
+        if not text or not isinstance(text, str):
+            return "default", 0.0
+        if len(text) > self.MAX_INPUT_LENGTH:
+            logger.warning("Input too long (%d chars), truncating to %d", len(text), self.MAX_INPUT_LENGTH)
+            text = text[:self.MAX_INPUT_LENGTH]
         text = text.lower().strip()
 
         # Rule-based matching first

@@ -18,6 +18,7 @@ env/
 *.json
 !config.json
 !package.json
+!tests/**/*.json
 conversation_history.json
 samantha_local_data.json
 assistant_session.json
