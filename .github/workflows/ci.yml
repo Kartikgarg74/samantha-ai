@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install google-generativeai requests python-dotenv scikit-learn numpy pyttsx3 pytest pytest-cov
+          # Skip heavy deps (torch, whisper, playwright) in CI — tested via import checks
+
+      - name: Lint check
+        run: |
+          pip install flake8
+          flake8 core/ ai/ actions/ voice/ --max-line-length=120 --ignore=E501,W503,E402,E722,F401 --count
+
+      - name: Verify no broken imports
+        run: |
+          ! grep -rn "from assistant\." --include="*.py" .
+          echo "No broken imports found."
+
+      - name: Test imports
+        env:
+          GOOGLE_API_KEY: "test-key"
+        run: |
+          python -c "from core.config import config_manager; print('core.config OK')"
+          python -c "from core.memory import MemoryManager; print('core.memory OK')"
+          python -c "from core.intent import IntentClassifier; print('core.intent OK')"
+          python -c "from ai.provider import LLMProvider; print('ai.provider OK')"
+
+      - name: Run tests
+        env:
+          GOOGLE_API_KEY: "test-key"
+        run: pytest tests/ -v --tb=short
+
+  security:
+    name: Security check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for leaked secrets
+        run: |
+          echo "Scanning for hardcoded API keys..."
+          if grep -rn "AIzaSy\|sk-\|gsk_" --include="*.py" --include="*.ts" . 2>/dev/null; then
+            echo "::error::API key found in source code!"
+            exit 1
+          fi
+          echo "Clean."
+
+      - name: Check .env not committed
+        run: |
+          if [ -f ".env" ]; then
+            echo "::error::.env file committed to repo!"
+            exit 1
+          fi
+          echo "Clean."
