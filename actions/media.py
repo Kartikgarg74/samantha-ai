@@ -16,7 +16,7 @@ This is a partial update showing only the integration of system prompts.
 """
 
 # Existing imports...
-from assistant.system_prompts import prompt_manager
+from core.prompts import prompt_manager
 
 class SpotifyControl:
     def __init__(self):

@@ -12,7 +12,7 @@ from urllib.parse import quote_plus
 from typing import Tuple, Optional
 
 # Import system prompts
-from assistant.system_prompts import prompt_manager
+from core.prompts import prompt_manager
 
 
 class BrowserControl:

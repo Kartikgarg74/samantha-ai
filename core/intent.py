@@ -20,7 +20,7 @@ try:
 except ImportError:
     ML_AVAILABLE = False
 
-from assistant.config_manager import config_manager
+from core.config import config_manager
 
 
 logger = logging.getLogger(__name__)

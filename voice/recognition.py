@@ -13,7 +13,7 @@ import time
 import threading
 import queue
 from typing import Dict, Optional, List, Any, Union, Callable
-from assistant.StatusIndicator import StatusIndicator
+from core.status import StatusIndicator
 # Optional imports for various speech recognition engines
 try:
     import speech_recognition as sr
@@ -28,7 +28,7 @@ except ImportError:
     WHISPER_AVAILABLE = False
 
 # Import config manager
-from assistant.config_manager import config_manager
+from core.config import config_manager
 
 
 logger = logging.getLogger(__name__)

@@ -32,7 +32,7 @@ except ImportError:
     TORCH_AVAILABLE = False
 
 # Import config manager
-from assistant.config_manager import config_manager
+from core.config import config_manager
 
 
 logger = logging.getLogger(__name__)

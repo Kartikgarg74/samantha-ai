@@ -55,7 +55,7 @@
     }
   },
   "system_prompts": {
-    "directory": "assistant/prompts"
+    "directory": "core/prompts_dir"
   },
   "apis": {
     "weather": {

@@ -61,8 +61,8 @@ samantha-ai/
 
 ## Roadmap
 
-- [x] Phase 1: Voice + system control + LLM brain
-- [ ] Phase 2: Playwright browser automation
+- [x] Phase 1: Voice + system control + LLM brain (Gemini/Ollama)
+- [ ] Phase 2: Playwright browser automation (replace webbrowser.open)
 - [ ] Phase 3: Web dashboard + Chrome extension
 - [ ] Phase 4: Research paper collection agent (vertical)
 

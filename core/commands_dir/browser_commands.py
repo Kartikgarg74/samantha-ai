@@ -6,7 +6,7 @@ interfacing with the browser_control module to execute the actual browser action
 """
 
 import re
-from assistant.browser_control import browser_action
+from actions.browser import browser_action
 
 def handle_browser_command(command_text):
     """

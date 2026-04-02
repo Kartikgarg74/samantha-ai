@@ -10,8 +10,8 @@ import logging
 from typing import List, Dict, Any, Tuple, Optional, Callable, Union
 import datetime
 
-from assistant.config_manager import config_manager
-from assistant.intent_classifier import intent_classifier
+from core.config import config_manager
+from core.intent import intent_classifier
 
 logger = logging.getLogger(__name__)
 

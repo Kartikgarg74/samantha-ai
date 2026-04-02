@@ -14,19 +14,17 @@ import uuid
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Import assistant modules
-from assistant.memory_manager import MemoryManager, memory_manager
-from assistant.speech_recognition_service import SpeechRecognitionService, speech_recognition_service
-from assistant.tts_service import TTSService, tts_service
-from assistant.intent_classifier import IntentClassifier, intent_classifier
-from assistant.spotify_control import control_spotify
-from assistant.browser_control import browser_action
-from assistant.whatsapp_integration import whatsapp_action
-from assistant.system_prompts import prompt_manager
-from assistant.command_processor import CommandProcessor
-from assistant.config_manager import config_manager
-from assistant.StatusIndicator import StatusIndicator
-from assistant.SessionManager import SessionManager
-from assistant.SamanthaAssistant import SamanthaAssistant
+from core.memory import MemoryManager, memory_manager
+from voice.recognition import SpeechRecognitionService, speech_recognition_service
+from voice.tts import TTSService, tts_service
+from core.intent import IntentClassifier, intent_classifier
+from actions.media import control_spotify
+from actions.browser import browser_action
+from actions.messaging import whatsapp_action
+from core.prompts import prompt_manager
+from core.commands import CommandProcessor
+from core.config import config_manager
+from core.session import SessionManager
 # Configure logging based on config
 import logging
 logging_level = config_manager.get('logging.level', 'INFO')
